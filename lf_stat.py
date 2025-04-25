@@ -3,7 +3,7 @@ import re
 import os
 from utils import rename_col, save_excel, generate_lf_frame
 
-def calcuate_lf_table(xls):
+def calculate_lf_table(xls):
     df = generate_lf_frame(xls, '肺功能检查(lb_lf)', '一秒用力呼气容积（FEV1）')
     df = df.reset_index(drop=False)
 
