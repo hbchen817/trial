@@ -1,15 +1,20 @@
 import pandas as pd
 import re
 import os
+import sys
 from utils import rename_col, save_excel, generate_lf_frame, generate_ivm_frame
 
 def calculate_lf_and_ivm(xls):
     df1 = generate_lf_frame(xls, "肺功能检查(lb_lf)", col_name='FEV1实测值/预测值%')
+    # print(df1)
     df2 = generate_lf_frame(xls, "肺功能检查(lb_lf)", col_name='一秒用力呼气容积（FEV1）')
+    # print(df2)
+    # 合并两个Frame
     df = pd.concat([df1, df2], axis=1)
 
     ivm_df = generate_ivm_frame(xls, sheet_name='吸气流速测定(lb_ivm)', col_name='测定均值（系统计）(L/min)')
 
+    print(ivm_df)
     # 往FEV Frame中合入流速测定数据Frame
     df = pd.concat([df, ivm_df], axis=1)
     df = df.reset_index(drop=False)
@@ -33,6 +38,9 @@ def calculate_lf_and_ivm(xls):
     id_to_age = dict(zip(subject_df.index, subject_df['年龄']))
     age_series = series.map(id_to_age)
     df.insert(loc=2, column='年龄', value=age_series)
+    
+#     print(df)
+   
 
     # 列名包含如下关键字的列统一转数字
     substrs = ['一秒用力呼气容积（FEV1）', 
@@ -40,6 +48,9 @@ def calculate_lf_and_ivm(xls):
             '流速测定均值(L/min)',
             '年龄']
     target_cols = [col for col in df.columns if any(sub in col for sub in substrs)]
+    print(target_cols)
+#     sys.exit(0)
+    
     df[target_cols] = df[target_cols].apply(pd.to_numeric)
 
     # 过滤掉"age < 50"的受试者
