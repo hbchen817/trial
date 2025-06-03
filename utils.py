@@ -12,10 +12,10 @@ def rename_col(col, suffix):
 def save_excel(df: pd.DataFrame, sheet_name, file_path='stat.xlsx'):
     if os.path.exists(file_path):
         with pd.ExcelWriter(file_path, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
-            df.to_excel(writer, sheet_name=sheet_name, index=False)
+            df.to_excel(writer, sheet_name=sheet_name, index=False, float_format='%.3f')
     else:
         with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
-            df.to_excel(writer, sheet_name=sheet_name, index=False)
+            df.to_excel(writer, sheet_name=sheet_name, index=False, float_format='%.3f')
             
 def generate_lf_frame(xls, sheet_name, col_name):
     # 预处理
@@ -101,7 +101,10 @@ def generate_pef_frame(xls, sheet_name):
     df_final = df_final.sort_values(by=['SUBJID', 'VISITOID'])
     df_final = df_final.reset_index(drop=True)
     # print(df_final)
-
+    
+    df_final = df_final.pivot(index='SUBJID', columns='VISITOID', values='BEFRES1')
+    # df_final = df_final.fillna('')
+    # print(df_final)
     return df_final
     
     

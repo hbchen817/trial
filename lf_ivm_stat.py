@@ -14,7 +14,7 @@ def calculate_lf_and_ivm(xls):
 
     ivm_df = generate_ivm_frame(xls, sheet_name='吸气流速测定(lb_ivm)', col_name='测定均值（系统计）(L/min)')
 
-    print(ivm_df)
+    # print(ivm_df)
     # 往FEV Frame中合入流速测定数据Frame
     df = pd.concat([df, ivm_df], axis=1)
     df = df.reset_index(drop=False)
